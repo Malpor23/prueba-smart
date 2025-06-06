@@ -1,0 +1,524 @@
+{
+    "info": {
+        "_postman_id": "inventory-basic-api",
+        "name": "API Prueba Técnica",
+        "description": "Colección completa para probar la API de gestión de inventario con roles de usuario",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Autenticación",
+            "item": [
+                {
+                    "name": "Registrar",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Juan Pérez\",\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/register",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "register"]
+                        }
+                    }
+                },
+                {
+                    "name": "Login Usuario",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.environment.set('user_token', jsonData.token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "login"]
+                        }
+                    }
+                },
+                {
+                    "name": "Login Admin",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.environment.set('admin_token', jsonData.token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "login"]
+                        }
+                    }
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{user_token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/logout",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "logout"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Productos",
+            "item": [
+                {
+                    "name": "Listar Productos",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{user_token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/products",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "products"]
+                        }
+                    }
+                },
+                {
+                    "name": "Ver Producto",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{user_token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/products/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "products", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Crear Producto (Solo Admin)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"category_id\": 1,\n    \"name\": \"Café Premium Test\",\n    \"description\": \"Café de prueba creado desde Postman\",\n    \"price\": 35000.00,\n    \"stock\": 25\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/products",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "products"]
+                        }
+                    }
+                },
+                {
+                    "name": "Actualizar Producto (Solo Admin)",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"category_id\": 1,\n    \"name\": \"Café Premium Actualizado\",\n    \"description\": \"Descripción actualizada del café\",\n    \"price\": 40000.00,\n    \"stock\": 30\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/products/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "products", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Eliminar Producto (Solo Admin)",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/products/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "products", "1"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Categorías",
+            "item": [
+                {
+                    "name": "Listar Categorías",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{user_token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/categories",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "categories"]
+                        }
+                    }
+                },
+                {
+                    "name": "Ver Categoría",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{user_token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/categories/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "categories", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Crear Categoría (Solo Admin)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Categoría Test\",\n    \"description\": \"Categoría de prueba creada desde Postman\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/categories",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "categories"]
+                        }
+                    }
+                },
+                {
+                    "name": "Actualizar Categoría (Solo Admin)",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Categoría Actualizada\",\n    \"description\": \"Descripción actualizada de la categoría\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/categories/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "categories", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Eliminar Categoría (Solo Admin)",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/categories/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "categories", "1"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Usuarios (Solo Admin)",
+            "item": [
+                {
+                    "name": "Listar Usuarios",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/users",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users"]
+                        }
+                    }
+                },
+                {
+                    "name": "Ver Usuario",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/users/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Crear Usuario",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Usuario Test\",\n    \"email\": \"test@test.com\",\n    \"password\": \"password_test\",\n    \"role\": \"user\",\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/users",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users"]
+                        }
+                    }
+                },
+                {
+                    "name": "Actualizar Usuario",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Usuario Test actualizado\",\n    \"email\": \"test@test.com\",\n    \"role\": \"admin\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/users/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Eliminar Usuario",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_token}}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/users/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users", "1"]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost",
+            "type": "string"
+        }
+    ]
+}
